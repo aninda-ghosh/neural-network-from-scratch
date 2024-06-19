@@ -2,7 +2,14 @@
 
 ## Changelogs
 
-### v0.0.1
+### v0.1.0 (feature)
+
+- Added setup script for local installation.
+- Added model save and load feature.
+- Config file explicitly added to modify the parameters globally.
+- Added Docstrings for the codebase.
+
+### v0.0.1 (feature)
 
 - Defined components for a fully connected network. (Modularized)
     - Neuron

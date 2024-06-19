@@ -1,4 +1,5 @@
 import numpy as np
+import json
 from neural_framework.network import FullyConnectedLayer
 from neural_framework.activations import Sigmoid, ReLU
 from neural_framework.loss_func import MSE
@@ -27,7 +28,7 @@ class ANN:
         return self.forward(X)
 
     def __repr__(self):
-        return f"Fully Connected Network with {len(self.layers)} layers"
+        return f"ANN: {self.layers}"
 
     def forward(self, X):
         output = X
@@ -41,3 +42,21 @@ class ANN:
         for layer in reversed(self.layers): # Backpropagate the error
             error_gradient = layer.backward(error_gradient, learning_rate)
         return error_gradient
+
+    def save(self, path):
+        parameters_dict = {}
+        for i, layer in enumerate(self.layers):
+            for j, neuron in enumerate(layer.neurons):
+                parameters_dict[f"layer_{i}_neuron_{j}"] = {
+                    "weights": neuron.weights.tolist(),
+                    "bias": neuron.bias
+                }
+        
+        # Store in a JSON file
+        with open(path, "w") as file:
+            json.dump(parameters_dict, file)
+
+    def load(self, path):
+        parameters_dict = {}
+        with open(path, "r") as file:
+            parameters_dict = json.load(file)
