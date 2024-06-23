@@ -13,12 +13,14 @@ This is a basic neural framework to train a Deep Neural Network with Fully Conne
     - Relu
 - Loss Function provided. Other loss functions (e.g Mean Absolute Error, Cross Entropy Error) can be easily integrated in the future.
     - Mean Square Error
+- Supports vanilla Gradient Descent.
 
 ### Caveats
 
 - Don't have support for Autograd in this version.
 - Gradient accumulation is limited in nature.
 - Batched backpropagataion is not implemented yet.
+- Optimizers like (SGD, ADAM and RMS Prop) are still not implemented in the minimal framework.
 
 ## Directory Structure
 
