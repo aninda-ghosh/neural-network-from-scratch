@@ -2,6 +2,11 @@
 
 ## Changelogs
 
+### v0.1.1 (bugfix)
+
+- Fixed model loading issue, previously the model loading was local and was not effecting the true weights in the context of the model.
+- Removed support for None activation in the network.
+
 ### v0.1.0 (feature)
 
 - Added setup script for local installation.

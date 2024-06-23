@@ -18,8 +18,6 @@ class CustomModel:
         self.learning_rate = config['learning_rate']
         self.loss = MSE()
 
-        print(f"Model: {self.model}")
-
     def train(self, X, y):
         for epoch in range(self.epochs):
             epoch_loss = 0
@@ -74,7 +72,6 @@ if __name__ == "__main__":
     if args.action == "train":
         print("Training the model...")
 
-
         # Generate some random data for training
         X_train = np.array([
             [0.1, 0.2, 0.3],
@@ -107,7 +104,10 @@ if __name__ == "__main__":
         model.train(X_train, y_train)
         model.save(config['model_path'])
 
+        print(f"Model Arch: \n{model.model}")
+
     else:
+        print("Testing the model...")
         # Generate some random data for testing
         X_test = np.array([
             [0.1, 0.3, 0.5],
@@ -127,6 +127,8 @@ if __name__ == "__main__":
 
         # Load the model
         model.load(config['model_path'])
+
+        print(f"Loaded Model Arch: \n{model.model}")
 
         y_pred = model.predict(X_test)
         print(f"\nPredictions: {y_pred}")

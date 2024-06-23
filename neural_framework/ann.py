@@ -16,7 +16,7 @@ class ANN:
             for layer in hidden_layers:
                 assert layer > 0, "Hidden layer size must be greater than 0"
     
-        assert activation in ['sigmoid', 'relu', None], "Unsupported activation function"
+        assert activation in ['sigmoid', 'relu'], "Unsupported activation function"
         
 
         self.layers = []
@@ -28,7 +28,15 @@ class ANN:
         return self.forward(X)
 
     def __repr__(self):
-        return f"ANN: {self.layers}"
+        output = ""
+        for i, layer in enumerate(self.layers):
+            output += f"Layer {i}:\n"
+            for j, neuron in enumerate(layer.neurons):
+                output += f"  Neuron {j}:\n"
+                output += f"    Weights: {neuron.weights}\n"
+                output += f"    Bias: {neuron.bias}\n"
+        return output
+
 
     def forward(self, X):
         output = X
@@ -60,3 +68,10 @@ class ANN:
         parameters_dict = {}
         with open(path, "r") as file:
             parameters_dict = json.load(file)
+
+        assert len(parameters_dict) == sum([len(layer.neurons) for layer in self.layers]), "Model architecture mismatch"
+
+        for i, layer in enumerate(self.layers):
+            for j, neuron in enumerate(layer.neurons):
+                neuron.weights = np.array(parameters_dict[f"layer_{i}_neuron_{j}"]["weights"])
+                neuron.bias = parameters_dict[f"layer_{i}_neuron_{j}"]["bias"]
