@@ -16,7 +16,7 @@ class ANN:
             for layer in hidden_layers:
                 assert layer > 0, "Hidden layer size must be greater than 0"
     
-        assert activation in ['sigmoid', 'relu'], "Unsupported activation function"
+        assert activation in ['sigmoid', 'relu', 'leaky_relu', 'tanh'], "Unsupported activation function"
         
 
         self.layers = []
@@ -47,8 +47,7 @@ class ANN:
         self.output = output
         return output
 
-    def backward(self, y, learning_rate):
-        error_gradient = MSE().backward(y, self.output)
+    def backward(self, error_gradient, learning_rate):
         for layer in reversed(self.layers): # Backpropagate the error
             error_gradient = layer.backward(error_gradient, learning_rate)
         return error_gradient

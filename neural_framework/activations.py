@@ -89,3 +89,34 @@ class ReLU(ActivationLayer):
     def backward(self, x):
         return np.where(x > 0, 1, 0)
 
+"""LeakyRelu class for activation layers in a neural network.
+
+Attributes:
+  name (str): The name of the activation layer.
+"""
+class LeakyReLU(ActivationLayer):
+    def __init__(self, alpha=0.01):
+        super().__init__('leaky_relu')
+        self.alpha = alpha
+
+    def forward(self, x):
+        return np.where(x > 0, x, self.alpha * x)
+
+    def backward(self, x):
+        return np.where(x > 0, 1, self.alpha)
+
+
+"""Tanh class for activation layers in a neural network.
+
+Attributes:
+  name (str): The name of the activation layer.
+"""
+class Tanh(ActivationLayer):
+    def __init__(self):
+        super().__init__('tanh')
+
+    def forward(self, x):
+        return np.tanh(x)
+
+    def backward(self, x):
+        return 1 - np.tanh(x) ** 2

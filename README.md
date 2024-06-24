@@ -93,6 +93,20 @@ This is a basic neural framework to train a Deep Neural Network with Fully Conne
 
 **Note:** Checkout the [main.py](main.py) to see an example usage in details. Input is currently implicit. Can be switched to loading data in a csv format.
 
+## Test Cases
+
+**Test Sample True**
+
+<!-- ![True Train Sample](./assets/Test_Spiral_True.png) -->
+<img src="./assets/Test_Spiral_True.png" alt="True Train Sample" width="400"/>
+
+
+**Test Sample Prediction**
+
+<!-- ![Pred Train Sample](./assets/Test_Spiral_Pred.png) -->
+<img src="./assets/Test_Spiral_Pred.png" alt="Pred Train Sample" width="400"/>
+
+
 ## Changelogs 
 
 **See the Changelogs Here! [Link](./CHANGELOGS.md)** 

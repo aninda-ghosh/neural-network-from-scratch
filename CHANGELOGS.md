@@ -2,6 +2,15 @@
 
 ## Changelogs
 
+### v0.3.0 (feature + bugfix)
+
+- Fixed the issue with 1 hidden neuron edge case. The dimensionality squuezing was effecting the backward gradient flow.
+- Decouples loss backward function and model backward function call.
+- Added Leaky Relu activation to tackle the vanishing gradient problem.
+- Added Tanh activation.
+- Added a script to generate data sources e.g. Spiral Data, XOR Data `generate_data.ipynb`
+- Added Binary Cross Entropy Loss function.
+
 ### v0.2.1 (feature)
 
 - Added visualization support for the training losses.

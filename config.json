@@ -1,9 +1,12 @@
 {
-    "input_size": 3,
-    "hidden_layers": [4, 3],
-    "output_size": 2,
-    "activation": "relu", 
-    "epochs": 10, 
-    "learning_rate": 0.01, 
-    "model_path": "custom_model.json"
+    "seed": 34,
+    "input_size": 7,
+    "hidden_layers": [5, 3, 2],
+    "output_size": 1,
+    "activation": "tanh", 
+    "epochs": 3000, 
+    "learning_rate": 0.03, 
+    "model_path": "custom_model.json", 
+    "train_data_path": "train_data.csv",
+    "test_data_path": "test_data.csv"
 }

@@ -6,6 +6,7 @@ import os
 from neural_framework.loss_func import MSE
 from neural_framework.ann import ANN
 import matplotlib.pyplot as plt
+import csv
 
 
 class CustomModel:
@@ -21,16 +22,24 @@ class CustomModel:
     def train(self, X, y):
         losses = []
         for epoch in range(self.epochs):
-            epoch_loss = 0
-            
+            batch_loss = 0
+            outputs = []
             for i in tqdm.tqdm(range(len(X))):
                 output = self.model(X[i])
+                outputs.append(output)
                 error = self.loss(y[i], output)
-                epoch_loss += error
-                accumulated_grad = self.model.backward(y[i], self.learning_rate)
-            losses.append(epoch_loss/len(X))
+                batch_loss += error
 
-            print(f"Epoch {epoch + 1}/{self.epochs}, Mean Loss: {epoch_loss/len(X)}")
+            y = np.array(y)
+            outputs = np.array(outputs)
+
+            loss_gradient = self.loss.backward(y, outputs)
+            loss_gradient = np.mean(loss_gradient, axis=0)
+
+            self.model.backward(loss_gradient, self.learning_rate)
+            losses.append(batch_loss/len(X))
+
+            print(f"Epoch {epoch + 1}/{self.epochs}, Mean Loss: {batch_loss/len(X)}")
         
         return losses
 
@@ -56,7 +65,6 @@ class CustomModel:
 
 
 if __name__ == "__main__":
-    np.random.seed(21)  #? For reproducibility
 
     parser = argparse.ArgumentParser(description="Neural Framework, Custom Model")
     parser.add_argument("--config", type=str, default="config.json", help="Path to the configuration file")
@@ -69,6 +77,7 @@ if __name__ == "__main__":
     with open(args.config, "r") as file:
         config = json.load(file)
     
+    np.random.seed(config['seed'])  #? For reproducibility
 
     model = CustomModel(config)
 
@@ -76,32 +85,35 @@ if __name__ == "__main__":
     if args.action == "train":
         print("Training the model...")
 
-        # Generate some random data for training
-        X_train = np.array([
-            [0.1, 0.2, 0.3],
-            [0.5, 0.4, 0.3],
-            [0.9, 0.8, 0.7],
-            [0.3, 0.2, 0.1],
-            [0.6, 0.5, 0.4],
-            [0.7, 0.8, 0.9],
-            [0.2, 0.3, 0.4],
-            [0.4, 0.3, 0.2],
-            [0.8, 0.7, 0.6],
-            [0.3, 0.4, 0.5]
-        ])
+        print(f"Model Arch: \n{model.model}")
 
-        y_train = np.array([
-            [0.4, 0.5],
-            [0.2, 0.1],
-            [0.6, 0.5],
-            [0.4, 0.5],
-            [0.3, 0.2],
-            [0.6, 0.5],
-            [0.5, 0.6],
-            [0.1, 0.2],
-            [0.3, 0.4],
-            [0.6, 0.7]
-        ])
+        # load training data
+        train_data_path = config['train_data_path']
+        with open(train_data_path, 'r') as file:
+            reader = csv.reader(file)
+            data = list(reader)
+        
+        X_train = np.array([list(map(float, row[:-1])) for row in data])
+        #generate X_train with varied number of features x1, x2, x1_square, x2_square, x1_x2, sin(x1), sin(x2)
+        X_train = np.array([[row[0], row[1], row[0]**2, row[1]**2, row[0]*row[1], np.sin(row[0]), np.sin(row[1])] for row in X_train])
+
+        y_train = np.array([list(map(float, row[-1:])) for row in data])
+
+        
+        # # Generate some random data for training
+        # X_train = np.array([
+        #     [0, 0],
+        #     [1, 1],
+        #     [1, 0],
+        #     [0, 1],
+        # ])
+
+        # y_train = np.array([
+        #     [0],
+        #     [0],
+        #     [1],
+        #     [1]
+        # ])
 
     
         # Train the model
@@ -122,22 +134,32 @@ if __name__ == "__main__":
     else:
         print("Testing the model...")
         
-        # Generate some random data for testing
-        X_test = np.array([
-            [0.1, 0.3, 0.5],
-            [0.5, 0.7, 0.9],
-            [0.6, 0.2, 0.4],
-            [0.3, 0.5, 0.7],
-            [0.2, 0.6, 0.8]
-        ])
+        # Load test data
+        test_data_path = config['test_data_path']
+        with open(test_data_path, 'r') as file:
+            reader = csv.reader(file)
+            data = list(reader)
 
-        y_test = np.array([
-            [0.4, 0.6],
-            [0.8, 0.7],
-            [0.5, 0.3],
-            [0.6, 0.8],
-            [0.7, 0.9]
-        ])
+        X_test = np.array([list(map(float, row[:-1])) for row in data])
+        
+        #generate X_test with varied number of features x1, x2, x1_square, x2_square, x1_x2, sin(x1), sin(x2)
+        X_test = np.array([[row[0], row[1], row[0]**2, row[1]**2, row[0]*row[1], np.sin(row[0]), np.sin(row[1])] for row in X_test])
+        y_test = np.array([list(map(float, row[-1:])) for row in data])
+
+        # # Generate some random data for testing
+        # X_test = np.array([
+        #     [0, 0],
+        #     [1, 1],
+        #     [1, 0],
+        #     [0, 1],
+        # ])
+
+        # y_test = np.array([
+        #     [0],
+        #     [0],
+        #     [1],
+        #     [1]
+        # ])
 
         # Load the model
         model.load(config['model_path'])
@@ -146,6 +168,14 @@ if __name__ == "__main__":
 
         y_pred = model.predict(X_test)
         print(f"\nPredictions: {y_pred}")
+
+        #plot the predictions in a scatter plot with different colors and legend
+        fig = plt.figure()
+        plt.scatter(X_test[:,0], X_test[:,1], c=y_pred, marker='o', cmap='autumn')
+        plt.xlabel("X1")
+        plt.ylabel("X2")
+        plt.title("Predictions")
+        plt.show()
 
         # Calculate the mean squared error
         mse = MSE()

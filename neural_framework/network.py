@@ -1,5 +1,5 @@
 import numpy as np
-from neural_framework.activations import Sigmoid, ReLU
+from neural_framework.activations import Sigmoid, ReLU, LeakyReLU, Tanh
 
 
 """
@@ -19,15 +19,19 @@ class Neuron:
       input_size (int): The number of inputs to the neuron.
       activation (str, optional): The type of activation function to use. Supported options are 'sigmoid' and 'relu'. Defaults to None.
     """
-    assert activation in ['sigmoid', 'relu'], "Unsupported activation function"
+    assert activation in ['sigmoid', 'relu', 'leaky_relu', 'tanh'], "Unsupported activation function"
 
     if activation == 'sigmoid':
       self.activation = Sigmoid()
     elif activation == 'relu':
       self.activation = ReLU()
+    elif activation == 'leaky_relu':
+      self.activation = LeakyReLU()
+    elif activation == 'tanh':
+      self.activation = Tanh()
 
     self.weights = np.random.randn(input_size)
-    self.bias = 0.01
+    self.bias = 0.0001
 
   def __call__(self, inputs):
     """
@@ -67,21 +71,15 @@ class Neuron:
     Returns:
       ndarray: The gradient of the loss function with respect to the input of this neuron.
     """
-    # Gradient of the activation function
     d_activation = d_output * self.activation.backward(self.linear_output)
-    
-    # Gradient with respect to weights
+        
     d_weights = np.dot(self.inputs.T, d_activation)
+    d_bias = np.sum(d_activation, axis=0)
     
-    # Gradient with respect to bias
-    d_bias = np.sum(d_activation)
-    
-    # Update weights and bias
     self.weights -= learning_rate * d_weights
     self.bias -= learning_rate * d_bias
     
-    # Gradient with respect to inputs
-    d_inputs = np.dot(d_activation, self.weights)
+    d_inputs = np.dot(d_activation, self.weights.T)
     
     return d_inputs
 
@@ -148,14 +146,16 @@ class FullyConnectedLayer(NeuralLayer):
 
     def forward(self, inputs):
         self.inputs = inputs
-        outputs = np.array([neuron(inputs) for neuron in self.neurons]).T
-        outputs = np.squeeze(outputs)
-        return outputs
+        self.outputs = np.array([neuron(inputs) for neuron in self.neurons]).T
+        return self.outputs
 
     def backward(self, error_gradient, learning_rate):
-        input_gradients = np.zeros_like(self.inputs) # Initialize input gradients to zero
+        input_gradients = [] # Initialize input gradients to zero
         for i, neuron in enumerate(self.neurons):
-            input_gradients += neuron.backward(error_gradient[i], learning_rate)
+            input_gradients.append(neuron.backward(error_gradient[i], learning_rate))
+        input_gradients = np.array(input_gradients)
+        #sum over all the gradients in dim 0
+        input_gradients = np.sum(input_gradients, axis=0)
         return input_gradients
 
 

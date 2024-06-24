@@ -73,3 +73,29 @@ class MSE(Losses):
 
     def backward(self, y_true, y_pred):
         return 2 * (y_pred - y_true) / y_true.size
+
+"""Binary Cross Entropy Loss class.
+
+Attributes:
+  name (str): The name of the loss function.
+"""
+class BinaryCrossEntropyLoss(Losses):
+    """
+    Binary Cross Entropy Loss class.
+
+    Attributes:
+      name (str): The name of the loss function.
+    """
+    def __init__(self):
+        super().__init__('binary_cross_entropy')
+
+    def forward(self, y_true, y_pred):
+        y_pred = np.clip(y_pred, 1e-12, 1 - 1e-12)
+        
+        # Compute the binary cross-entropy loss
+        return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
+
+    def backward(self, y_true, y_pred):
+        y_pred = np.clip(y_pred, 1e-12, 1 - 1e-12)
+        
+        return (y_pred - y_true) / (y_pred * (1 - y_pred) * y_true.size)
