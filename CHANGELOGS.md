@@ -2,6 +2,10 @@
 
 ## Changelogs
 
+### v0.2.1 (feature)
+
+- Added visualization support for the training losses.
+
 ### v0.2.0 (feature + bugfix)
 
 - Added suuport for Input layer separately, Initial implementation of the Neuron class was a bit buggy, now each neuron has `n inputs`, `1 Activation` and `1 Output`.

@@ -5,7 +5,7 @@ import argparse
 import os
 from neural_framework.loss_func import MSE
 from neural_framework.ann import ANN
-
+import matplotlib.pyplot as plt
 
 
 class CustomModel:
@@ -19,6 +19,7 @@ class CustomModel:
         self.loss = MSE()
 
     def train(self, X, y):
+        losses = []
         for epoch in range(self.epochs):
             epoch_loss = 0
             
@@ -27,8 +28,11 @@ class CustomModel:
                 error = self.loss(y[i], output)
                 epoch_loss += error
                 accumulated_grad = self.model.backward(y[i], self.learning_rate)
+            losses.append(epoch_loss/len(X))
 
             print(f"Epoch {epoch + 1}/{self.epochs}, Mean Loss: {epoch_loss/len(X)}")
+        
+        return losses
 
     def predict(self, X):
         outputs = []
@@ -57,7 +61,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Neural Framework, Custom Model")
     parser.add_argument("--config", type=str, default="config.json", help="Path to the configuration file")
     parser.add_argument("--action", type=str, default="train", help="Action to perform: train or test")
-
+    parser.add_argument("--visualize", type=bool, default=False, help="Visualize the training losses")
 
     args = parser.parse_args()
 
@@ -101,10 +105,19 @@ if __name__ == "__main__":
 
     
         # Train the model
-        model.train(X_train, y_train)
+        train_losses = model.train(X_train, y_train)
         model.save(config['model_path'])
 
         print(f"Model Arch: \n{model.model}")
+
+        if args.visualize:
+            # Plot the training losses with respect to epochs
+            fig = plt.figure()
+            plt.plot(np.arange(0, config['epochs']), train_losses)
+            plt.xlabel("Epochs")
+            plt.ylabel("Loss")
+            plt.title("Training Loss")
+            plt.show()
 
     else:
         print("Testing the model...")

@@ -67,7 +67,7 @@ This is a basic neural framework to train a Deep Neural Network with Fully Conne
 
 - Runing the train script
   ```
-  python main.py --config config.json --action train
+  python main.py --config config.json --action train --visualize True
   ```
   This will save the parameters of the model in a json file for now, which can be loaded later in the test mode.
 
