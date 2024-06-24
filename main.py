@@ -52,7 +52,7 @@ class CustomModel:
 
 
 if __name__ == "__main__":
-    np.random.seed(0)  #? For reproducibility
+    np.random.seed(21)  #? For reproducibility
 
     parser = argparse.ArgumentParser(description="Neural Framework, Custom Model")
     parser.add_argument("--config", type=str, default="config.json", help="Path to the configuration file")
@@ -108,6 +108,7 @@ if __name__ == "__main__":
 
     else:
         print("Testing the model...")
+        
         # Generate some random data for testing
         X_test = np.array([
             [0.1, 0.3, 0.5],

@@ -2,6 +2,12 @@
 
 ## Changelogs
 
+### v0.2.0 (feature + bugfix)
+
+- Added suuport for Input layer separately, Initial implementation of the Neuron class was a bit buggy, now each neuron has `n inputs`, `1 Activation` and `1 Output`.
+- Added a small value int he bias term to stabilise the backpropagation, relu activation can lead to 0 backward gradient sometimes.
+- Fixed the backprop algorithm for a single neuron. 
+
 ### v0.1.1 (bugfix)
 
 - Fixed model loading issue, previously the model loading was local and was not effecting the true weights in the context of the model.

@@ -1,6 +1,6 @@
 import numpy as np
 import json
-from neural_framework.network import FullyConnectedLayer
+from neural_framework.network import FullyConnectedLayer, InputLayer
 from neural_framework.activations import Sigmoid, ReLU
 from neural_framework.loss_func import MSE
 
@@ -21,8 +21,10 @@ class ANN:
 
         self.layers = []
         layer_sizes = [input_size] + hidden_layers + [output_size]
-        for i in range(len(layer_sizes) - 1):
-            self.layers.append(FullyConnectedLayer(layer_sizes[i], layer_sizes[i + 1], activation))
+        
+        self.layers.append(InputLayer(input_size, activation))
+        for i in range(1, len(layer_sizes)):
+            self.layers.append(FullyConnectedLayer(layer_sizes[i-1], layer_sizes[i], activation))
     
     def __call__(self, X):
         return self.forward(X)

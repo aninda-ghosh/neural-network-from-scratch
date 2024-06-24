@@ -77,15 +77,19 @@ This is a basic neural framework to train a Deep Neural Network with Fully Conne
   ```
   This will load the model if a file exists in the path given, else an error is raised
 
-#### Sample Usage
+## Reference
 
-**Sample Usage with Relu Activation**
+**Sample Architecture**
 
-![Relu Usage](./assets/sample_usage_relu.png)
+![Sample Arch](./assets/sample_architecture.png)
 
-**Sample Usage with Sigmoid Activation**
+**Sample Training with Relu Activation**
 
-![Sigmoid Usage](./assets/sample_usage_sigmoid.png)
+![Training Relu](./assets/sample_training.png)
+
+**Sample Testing with Relu Activation**
+
+![Training Relu](./assets/sample_testing.png)
 
 **Note:** Checkout the [main.py](main.py) to see an example usage in details. Input is currently implicit. Can be switched to loading data in a csv format.
 

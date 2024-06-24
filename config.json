@@ -1,6 +1,6 @@
 {
     "input_size": 3,
-    "hidden_layers": [3, 2],
+    "hidden_layers": [4, 3],
     "output_size": 2,
     "activation": "relu", 
     "epochs": 10, 
